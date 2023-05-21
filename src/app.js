@@ -1,15 +1,14 @@
-//DOM Vars
+// dom
 const iconToggle = document.getElementById('toggle-icon');
 const darkModeToggle = document.getElementById('dark-mode-toggle');
 
-//Theme Vars
+//theme color
 const bgColor = '--bg-color';
 const txtColor = '--text-color';
 const elmntColor = '--elements-color';
 const inptColor = '--input-color';
 const boxShadow = '--box-shadow';
 let darkMode = true;
-
 
 const refresh =  () =>  {    
     setTimeout(() => {
@@ -41,10 +40,9 @@ const switchToDarkMode  = () => {
     iconToggle.classList.add('fas');
     localStorage.setItem('isDark', 'yes');
     darkMode = true;
- 
 };
 
-//On darkMode icon Click
+//on darkmode icon click
 darkModeToggle.addEventListener('click', e => {
     darkMode ? switchToLightMode() :  switchToDarkMode();
     refresh();
@@ -52,34 +50,27 @@ darkModeToggle.addEventListener('click', e => {
 })
 
 
-//On Document Load
+//on document load
 document.addEventListener('DOMContentLoaded', () => {
-    //Check color theme
+    //check color theme
     const isDark = localStorage.getItem('isDark');
     (isDark === 'yes') ?    switchToDarkMode() : switchToLightMode();
 
-    //Render content to UI based ON page
+    //render content to UI based on page
     const url = window.location.href.toString();
 
      if (url.includes('country.html')) {
         CountryPageInit()
-
         loadEventListeners()
-         
      }
-
      else{
         getAllCountries()
-
         loadHomeEventListeners()
-
      }
-   
-   
 })
 
 const loadHomeEventListeners = () => {
-    //Dropdown toggle
+    //dropdown toggle
     const dropBtn = document.querySelector('.dropbtn');
     const dropContent = document.querySelector('.dropdown-content');
 
@@ -89,45 +80,35 @@ const loadHomeEventListeners = () => {
     })
 
 
-    //SEARCH EVENT
-    // Get the input field
+    //search event
+    // get the input field
     const searchInput = document.getElementById("search-input");
 
     searchInput.addEventListener('keyup' , e => {
         if(e.key === 'Enter'){
-
             const value = e.target.value.toLowerCase();
-
             getSpecificCountry(value);
-
             e.target.value = '';
-            
             e.preventDefault();
         }
     })
 
-    //DROPDOWN LIST SELECT EVENT
+    //dropdownlist select event
     const regions =document.querySelectorAll('.region');
     regions.forEach( region => {
-
         region.addEventListener('click', e => {
             const value = e.target.innerHTML.toLowerCase();
-
             getRegionCountries(value);
-
             dropContent.classList.remove('show');
-
             e.preventDefault();
         })
         
     });
 
-    //SAVE COUNTRY NAME TO LS && REDIRECTING
+    //save country name to ls & redirecting
      const saveName = (e) => {
-     if(e.target.parentElement.classList.contains('country-link'))
-     {
+     if(e.target.parentElement.classList.contains('country-link')){
         const link = e.target.parentElement;
-
         const countryName = link.getAttribute('data-name').toLowerCase();
 
         //clear previous data
@@ -145,7 +126,7 @@ const loadHomeEventListeners = () => {
 
 }
 
-    //EVENT LISTENERS FOR COUNTRY PAGE
+    //event listener for country page
     const loadEventListeners = () => {
         const backBtn = document.querySelector('.back-btn');
 
@@ -153,7 +134,7 @@ const loadHomeEventListeners = () => {
             window.location.href = './index.html';
         })
 
-        //SAVE COUNTRY NAME TO LS && REDIRECTING
+        //save country name to ls & redirecting
        const saveName = (e) => {
         if(e.target.classList.contains('country-btn'))
         {  
@@ -168,7 +149,7 @@ const loadHomeEventListeners = () => {
              localStorage.setItem("country-code", countryCode);
    
              const code = JSON.stringify(localStorage.getItem('country-code'));
-             //Get country by code
+             //get country by code
               getCountryByCode(code);
 
              //refresh page
@@ -183,7 +164,7 @@ const loadHomeEventListeners = () => {
 
 
 
-//Render Countries to UI 
+//render countries to UI 
 const renderCountries = countriesData => {
     const countries = document.querySelector('.countries');
 
@@ -222,16 +203,16 @@ const renderCountries = countriesData => {
    countries.innerHTML = output;
 }
 
-//Render Country to UI (Country.html)
+//render countries to UI  (country.html)
 const renderCountry = country => {
     const countryElement = document.querySelector('.country');
     const data = country[0];
     
-    //Format native Name
+    //format native name
     const nativeNames = data.name.nativeName;
     const nativeName = Object.values(nativeNames)[0].common;
 
-     //Format Currencies
+     //format currencies
     const currencies = data.currencies;
     let currencyArr = []
     for( const key in currencies){
@@ -240,7 +221,7 @@ const renderCountry = country => {
     }
     const currency = currencyArr.join(', ');
 
-    //Format Languages
+    //format languages
     const languages = data.languages;
     let languagesArr = []
     for( const key in languages){
@@ -249,13 +230,13 @@ const renderCountry = country => {
     }
     const language = languagesArr.join(', ');
 
-    //Format Border Countries
+    //format border countries
     threeBorders = data.borders.slice(0,3);
 
     const borders = Object.assign({}, threeBorders);
     
-     
-     //INSERT DATA IN HTML
+    
+    //  insert data in html
      countryElement.innerHTML = ` 
      <div class="country-image">
             <img src="${data.flags.svg}" alt="${data.name.common}">
@@ -322,8 +303,8 @@ const renderCountry = country => {
 }
 
 
-//API REQUESTS 
-//Get all countries
+// api reqests
+// get all countries
 const getAllCountries = () => {
     axios.get('https://restcountries.com/v3.1/all')
     .then(function (response) {
@@ -338,7 +319,7 @@ const getAllCountries = () => {
 }
  
 
-//Get specific country
+//get specific country
 const getSpecificCountry = (name) => {
     axios.get(`https://restcountries.com/v3.1/name/${name}`)
     .then(function (response) { 
@@ -353,7 +334,7 @@ const getSpecificCountry = (name) => {
 }
   
  
-//Get countries by region
+//get countries by region
 const  getRegionCountries = (region) => {
     axios.get(`https://restcountries.com/v3.1/region/${region}`)
     .then(function (response) {
@@ -371,7 +352,7 @@ const  getRegionCountries = (region) => {
 
 
 
-//Get specific country (for Country Single Page)
+//get specific country (for Country Single Page)
 const getCountry = (name) => {
 
     axios.get(`https://restcountries.com/v3.1/name/${name}`)
@@ -387,7 +368,7 @@ const getCountry = (name) => {
     })
 }
 
-//Get specific country by code (for Country Single Page)
+//get specific country by code (for Country Single Page)
 const getCountryByCode = (code) => {
 
     axios.get(`https://restcountries.com/v3.1/alpha/${code.replace(/\"/g, "")}`)
